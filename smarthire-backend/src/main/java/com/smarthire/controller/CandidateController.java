@@ -1,13 +1,13 @@
 package com.smarthire.controller;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +40,22 @@ public class CandidateController {
 		Candidate candidate = candidateService.getCandidateById(id);
 
 		return ResponseEntity.ok(candidate);
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<Candidate> updateCandidate(@PathVariable Long id, @RequestBody Candidate updatedCandidate) {
+
+		Candidate candidate = candidateService.updateCandidate(id, updatedCandidate);
+
+		return ResponseEntity.ok(candidate);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteCandidate(@PathVariable Long id) {
+
+		candidateService.deleteCandidate(id);
+
+		return ResponseEntity.noContent().build();
 	}
 
 }

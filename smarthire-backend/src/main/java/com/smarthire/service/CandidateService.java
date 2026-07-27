@@ -18,6 +18,11 @@ public class CandidateService {
 
 	}
 
+	public Candidate getCandidateById(Long id) {
+		return candidateRepository.findById(id)
+				.orElseThrow(() -> new CandidateNotFoundException("Candidate not found with id: " + id));
+	}
+
 	public Candidate saveCandidate(Candidate candidate) {
 		return candidateRepository.save(candidate);
 
@@ -28,10 +33,27 @@ public class CandidateService {
 
 	}
 
-	public Candidate getCandidateById(Long id) {
-		return candidateRepository.findById(id)
-				.orElseThrow(() -> new CandidateNotFoundException(
-						"Candidate not found with id: " + id));
+	public Candidate updateCandidate(Long id, Candidate updatedCandidate) {
+
+		Candidate existingCandidate = candidateRepository.findById(id)
+				.orElseThrow(() -> new CandidateNotFoundException("Candidate not found with id: " + id));
+
+		existingCandidate.setFullName(updatedCandidate.getFullName());
+		existingCandidate.setEmail(updatedCandidate.getEmail());
+		existingCandidate.setPhone(updatedCandidate.getPhone());
+		existingCandidate.setSkills(updatedCandidate.getSkills());
+		existingCandidate.setExperience(updatedCandidate.getExperience());
+		existingCandidate.setLocation(updatedCandidate.getLocation());
+
+		return candidateRepository.save(existingCandidate);
+	}
+
+	public void deleteCandidate(Long id) {
+
+		Candidate candidate = candidateRepository.findById(id)
+				.orElseThrow(() -> new CandidateNotFoundException("Candidate not found with id: " + id));
+
+		candidateRepository.delete(candidate);
 	}
 
 }
