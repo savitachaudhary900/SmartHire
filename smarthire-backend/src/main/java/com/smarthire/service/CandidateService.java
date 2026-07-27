@@ -1,11 +1,11 @@
 package com.smarthire.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.smarthire.entity.Candidate;
+import com.smarthire.exception.CandidateNotFoundException;
 import com.smarthire.repository.CandidateRepository;
 
 @Service
@@ -28,8 +28,10 @@ public class CandidateService {
 
 	}
 
-	public Optional<Candidate> getCandidateById(Long id) {
-		return candidateRepository.findById(id);
+	public Candidate getCandidateById(Long id) {
+		return candidateRepository.findById(id)
+				.orElseThrow(() -> new CandidateNotFoundException(
+						"Candidate not found with id: " + id));
 	}
 
 }

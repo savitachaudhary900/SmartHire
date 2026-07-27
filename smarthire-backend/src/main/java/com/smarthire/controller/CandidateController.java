@@ -36,8 +36,8 @@ public class CandidateController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Optional<Candidate>> getCandidateById(@PathVariable Long id) {
-		Optional<Candidate> candidate = candidateService.getCandidateById(id);
+	public ResponseEntity<Candidate> getCandidateById(@PathVariable Long id) {
+		Candidate candidate = candidateService.getCandidateById(id);
 
 		return ResponseEntity.ok(candidate);
 	}
