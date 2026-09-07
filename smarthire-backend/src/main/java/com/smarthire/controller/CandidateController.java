@@ -60,6 +60,7 @@ public class CandidateController {
 //	}
 
 	@GetMapping("/{id}")
+	
 	public ResponseEntity<CandidateResponse> getCandidateById(@PathVariable Long id) {
 
 	    CandidateResponse response = candidateService.getCandidateById(id);
