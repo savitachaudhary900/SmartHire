@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.smarthire.dto.CandidateRequest;
+import com.smarthire.dto.CandidateResponse;
 import com.smarthire.entity.Candidate;
 import com.smarthire.exception.CandidateNotFoundException;
 import com.smarthire.repository.CandidateRepository;
@@ -18,35 +20,48 @@ public class CandidateService {
 
 	}
 
-	public Candidate getCandidateById(Long id) {
-		return candidateRepository.findById(id)
-				.orElseThrow(() -> new CandidateNotFoundException("Candidate not found with id: " + id));
-	}
+	public CandidateResponse getCandidateById(Long id) {
 
-	public Candidate saveCandidate(Candidate candidate) {
-		return candidateRepository.save(candidate);
-
-	}
-
-	public List<Candidate> getAllCandidates() {
-		return candidateRepository.findAll();
-
-	}
-
-	public Candidate updateCandidate(Long id, Candidate updatedCandidate) {
-
-		Candidate existingCandidate = candidateRepository.findById(id)
+		Candidate candidate = candidateRepository.findById(id)
 				.orElseThrow(() -> new CandidateNotFoundException("Candidate not found with id: " + id));
 
-		existingCandidate.setFullName(updatedCandidate.getFullName());
-		existingCandidate.setEmail(updatedCandidate.getEmail());
-		existingCandidate.setPhone(updatedCandidate.getPhone());
-		existingCandidate.setSkills(updatedCandidate.getSkills());
-		existingCandidate.setExperience(updatedCandidate.getExperience());
-		existingCandidate.setLocation(updatedCandidate.getLocation());
-
-		return candidateRepository.save(existingCandidate);
+		return mapToResponse(candidate);
 	}
+
+	public CandidateResponse saveCandidate(CandidateRequest request) {
+
+		Candidate candidate = new Candidate();
+
+		candidate.setFullName(request.getFullName());
+		candidate.setEmail(request.getEmail());
+		candidate.setPhone(request.getPhone());
+		candidate.setSkills(request.getSkills());
+		candidate.setExperience(request.getExperience());
+		candidate.setLocation(request.getLocation());
+
+		Candidate savedCandidate = candidateRepository.save(candidate);
+
+		return mapToResponse(savedCandidate);
+	}
+
+	public List<CandidateResponse> getAllCandidates() {
+
+		return candidateRepository.findAll().stream().map(this::mapToResponse).toList();
+	}
+
+	public CandidateResponse updateCandidate(Long id, CandidateRequest request) {		Candidate existingCandidate = candidateRepository.findById(id)
+				.orElseThrow(() -> new CandidateNotFoundException("Candidate not found with id: " + id));
+
+		existingCandidate.setFullName(request.getFullName());
+		existingCandidate.setEmail(request.getEmail());
+		existingCandidate.setPhone(request.getPhone());
+		existingCandidate.setSkills(request.getSkills());
+		existingCandidate.setExperience(request.getExperience());
+		existingCandidate.setLocation(request.getLocation());
+
+		Candidate savedCandidate = candidateRepository.save(existingCandidate);
+
+		return mapToResponse(savedCandidate);	}
 
 	public void deleteCandidate(Long id) {
 
@@ -54,6 +69,22 @@ public class CandidateService {
 				.orElseThrow(() -> new CandidateNotFoundException("Candidate not found with id: " + id));
 
 		candidateRepository.delete(candidate);
+	}
+
+	private CandidateResponse mapToResponse(Candidate candidate) {
+
+		CandidateResponse response = new CandidateResponse();
+
+		response.setId(candidate.getId());
+		response.setFullName(candidate.getFullName());
+		response.setEmail(candidate.getEmail());
+		response.setPhone(candidate.getPhone());
+		response.setSkills(candidate.getSkills());
+		response.setExperience(candidate.getExperience());
+		response.setLocation(candidate.getLocation());
+
+		return response;
+
 	}
 
 }

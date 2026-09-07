@@ -12,44 +12,71 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.smarthire.config.AppConfig;
+import com.smarthire.config.AppProperties;
+import com.smarthire.dto.CandidateRequest;
+import com.smarthire.dto.CandidateResponse;
 import com.smarthire.entity.Candidate;
 import com.smarthire.service.CandidateService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/candidates")
 public class CandidateController {
 
 	private final CandidateService candidateService;
+	private final AppConfig appConfig;
+	private final AppProperties appProperties;
 
-	public CandidateController(CandidateService candidateService) {
+	public CandidateController(CandidateService candidateService, AppConfig appConfig, AppProperties appProperties) {
 		this.candidateService = candidateService;
+		this.appConfig = appConfig;
+		this.appProperties = appProperties;
 	}
 
 	@PostMapping
-	public Candidate saveCandidate(@RequestBody Candidate candidate) {
-		return candidateService.saveCandidate(candidate);
+	public CandidateResponse saveCandidate(
+	        @Valid @RequestBody CandidateRequest request) {
+
+	    return candidateService.saveCandidate(request);
 	}
 
+//	@GetMapping("/config")
+//	public String getConfig() {
+//		return appProperties.getAppName() + " | Max Candidates: " + appProperties.getMaxCandidates() + " | Max Jobs: "
+//				+ appProperties.getMaxJobs();
+//	}
+
 	@GetMapping
-	public List<Candidate> getAllCandidates() {
+	public List<CandidateResponse> getAllCandidates() {
 		return candidateService.getAllCandidates();
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<Candidate> getCandidateById(@PathVariable Long id) {
-		Candidate candidate = candidateService.getCandidateById(id);
+//	@GetMapping("/app-name")
+//	public String getAppName() {
+//		return appConfig.getAppName();
+//
+//	}
 
-		return ResponseEntity.ok(candidate);
+	@GetMapping("/{id}")
+	public ResponseEntity<CandidateResponse> getCandidateById(@PathVariable Long id) {
+
+	    CandidateResponse response = candidateService.getCandidateById(id);
+
+	    return ResponseEntity.ok(response);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Candidate> updateCandidate(@PathVariable Long id, @RequestBody Candidate updatedCandidate) {
+	public ResponseEntity<CandidateResponse> updateCandidate(
+	        @PathVariable Long id,
+	        @Valid @RequestBody CandidateRequest request) {
 
-		Candidate candidate = candidateService.updateCandidate(id, updatedCandidate);
+	    CandidateResponse response = candidateService.updateCandidate(id, request);
 
-		return ResponseEntity.ok(candidate);
+	    return ResponseEntity.ok(response);
 	}
-
+	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteCandidate(@PathVariable Long id) {
 
