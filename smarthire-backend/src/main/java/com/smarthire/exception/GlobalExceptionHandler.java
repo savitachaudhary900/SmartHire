@@ -1,5 +1,6 @@
 package com.smarthire.exception;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,12 +30,25 @@ public class GlobalExceptionHandler {
 		});
 
 		return ResponseEntity.badRequest().body(errors);
-
 	}
 
-	@ExceptionHandler(DataIntegrityViolationException.class)
-	public ResponseEntity<String> handleDuplicateEmail(DataIntegrityViolationException exception) {
+		@ExceptionHandler(DataIntegrityViolationException.class)
+		public ResponseEntity<String> handleDataIntegrityViolation(
+		        DataIntegrityViolationException exception) {
 
-		return ResponseEntity.badRequest().body("Email already exists");
+		    Throwable cause = exception.getRootCause();
+
+		    if (cause instanceof SQLException
+		            && cause.getMessage().contains("Duplicate")) {
+
+		        return ResponseEntity
+		                .badRequest()
+		                .body("Email already exists");
+		    }
+
+		    return ResponseEntity
+		            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+		            .body("Database constraint violation");
+		}
 	}
-}
+

@@ -39,6 +39,8 @@ public class Candidate {
 
 	@Column(length = 100)
 	private String location;
+	
+	@Column(nullable = false, updatable = false)
 	private LocalDateTime createdAt;
 
 	

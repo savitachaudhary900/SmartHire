@@ -1,8 +1,8 @@
 package com.smarthire.controller;
 
+import java.net.URI;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +39,8 @@ public class CandidateController {
 	public ResponseEntity<CandidateResponse> saveCandidate(@Valid @RequestBody CandidateRequest request) {
 		CandidateResponse response = candidateService.saveCandidate(request);
 		return ResponseEntity
-				.status(HttpStatus.CREATED)
-				.body(response);
+		        .created(URI.create("/api/candidates/" + response.getId()))
+		        .body(response);
 	}
 
 //	@GetMapping("/config")
