@@ -31,14 +31,9 @@ public class CandidateService {
 	public CandidateResponse saveCandidate(CandidateRequest request) {
 
 		Candidate candidate = new Candidate();
-
-		candidate.setFullName(request.getFullName());
-		candidate.setEmail(request.getEmail());
-		candidate.setPhone(request.getPhone());
-		candidate.setSkills(request.getSkills());
-		candidate.setExperience(request.getExperience());
-		candidate.setLocation(request.getLocation());
-
+	
+		mapRequestToEntity(request, candidate);
+		
 		Candidate savedCandidate = candidateRepository.save(candidate);
 
 		return mapToResponse(savedCandidate);
@@ -49,19 +44,16 @@ public class CandidateService {
 		return candidateRepository.findAll().stream().map(this::mapToResponse).toList();
 	}
 
-	public CandidateResponse updateCandidate(Long id, CandidateRequest request) {		Candidate existingCandidate = candidateRepository.findById(id)
+	public CandidateResponse updateCandidate(Long id, CandidateRequest request) {
+		Candidate existingCandidate = candidateRepository.findById(id)
 				.orElseThrow(() -> new CandidateNotFoundException("Candidate not found with id: " + id));
 
-		existingCandidate.setFullName(request.getFullName());
-		existingCandidate.setEmail(request.getEmail());
-		existingCandidate.setPhone(request.getPhone());
-		existingCandidate.setSkills(request.getSkills());
-		existingCandidate.setExperience(request.getExperience());
-		existingCandidate.setLocation(request.getLocation());
+		mapRequestToEntity(request, existingCandidate);
 
 		Candidate savedCandidate = candidateRepository.save(existingCandidate);
 
-		return mapToResponse(savedCandidate);	}
+		return mapToResponse(savedCandidate);
+	}
 
 	public void deleteCandidate(Long id) {
 
@@ -85,6 +77,15 @@ public class CandidateService {
 
 		return response;
 
+	}
+
+	private void mapRequestToEntity(CandidateRequest request, Candidate candidate) {
+		candidate.setFullName(request.getFullName());
+		candidate.setEmail(request.getEmail());
+		candidate.setPhone(request.getPhone());
+		candidate.setSkills(request.getSkills());
+		candidate.setExperience(request.getExperience());
+		candidate.setLocation(request.getLocation());
 	}
 
 }
