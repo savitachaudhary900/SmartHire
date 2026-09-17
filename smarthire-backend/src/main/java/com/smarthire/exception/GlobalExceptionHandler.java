@@ -20,6 +20,11 @@ public class GlobalExceptionHandler {
 
 	}
 
+	@ExceptionHandler(JobNotFoundException.class)
+	public ResponseEntity<String> handleJobNotFound(JobNotFoundException exception) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+	}
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException exception) {
 
@@ -32,23 +37,16 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.badRequest().body(errors);
 	}
 
-		@ExceptionHandler(DataIntegrityViolationException.class)
-		public ResponseEntity<String> handleDataIntegrityViolation(
-		        DataIntegrityViolationException exception) {
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<String> handleDataIntegrityViolation(DataIntegrityViolationException exception) {
 
-		    Throwable cause = exception.getRootCause();
+		Throwable cause = exception.getRootCause();
 
-		    if (cause instanceof SQLException
-		            && cause.getMessage().contains("Duplicate")) {
+		if (cause instanceof SQLException && cause.getMessage().contains("Duplicate")) {
 
-		        return ResponseEntity
-		                .badRequest()
-		                .body("Email already exists");
-		    }
-
-		    return ResponseEntity
-		            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-		            .body("Database constraint violation");
+			return ResponseEntity.badRequest().body("Email already exists");
 		}
-	}
 
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Database constraint violation");
+	}
+}
