@@ -2,7 +2,6 @@ package com.smarthire.service.impl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.smarthire.dto.JobRequest;
@@ -17,7 +16,7 @@ public class JobServiceImpl implements JobService {
 
 	private final JobRepository jobRepository;
 
-	@Autowired
+	// @Autowired
 	public JobServiceImpl(JobRepository jobRepository) {
 		this.jobRepository = jobRepository;
 	}
@@ -71,7 +70,15 @@ public class JobServiceImpl implements JobService {
 				.orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
 		return mapToResponse(job);
 	}
+	@Override
+	public List<JobResponse> searchJobsByTitle(String title) {
+		return jobRepository.findByTitleContainingIgnoreCase(title)
+				.stream().
+				map(this::mapToResponse)
+				.toList();
+	}
 
+	
 	@Override
 	public JobResponse updateJob(Long id, JobRequest request) {
 		Job existingJob = jobRepository.findById(id)
@@ -91,4 +98,5 @@ public class JobServiceImpl implements JobService {
 		jobRepository.delete(existingJob);
 	}
 
+	
 }

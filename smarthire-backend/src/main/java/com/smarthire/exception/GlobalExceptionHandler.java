@@ -11,6 +11,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import jakarta.validation.ConstraintViolationException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -48,5 +50,22 @@ public class GlobalExceptionHandler {
 		}
 
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Database constraint violation");
+	}
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ResponseEntity<Map<String, String>> handleConstraintViolation(
+	        ConstraintViolationException exception) {
+
+	    Map<String, String> errors = new HashMap<>();
+
+	    exception.getConstraintViolations().forEach(error -> {
+	        String fieldName = error.getPropertyPath().toString();
+	        String message = error.getMessage();
+
+	        errors.put(fieldName, message);
+	    });
+
+	    return ResponseEntity
+	            .badRequest()
+	            .body(errors);
 	}
 }

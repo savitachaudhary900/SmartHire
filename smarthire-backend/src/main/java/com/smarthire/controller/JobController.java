@@ -3,8 +3,8 @@ package com.smarthire.controller;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smarthire.dto.JobRequest;
@@ -19,14 +20,16 @@ import com.smarthire.dto.JobResponse;
 import com.smarthire.service.JobService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 @RestController
 @RequestMapping("/api/jobs")
+@Validated
 public class JobController {
 
 	private final JobService jobService;
 
-	@Autowired
+	// @Autowired
 	public JobController(JobService jobService) {
 		this.jobService = jobService;
 	}
@@ -43,6 +46,12 @@ public class JobController {
 	public List<JobResponse> getAllJobs() {
 
 		return jobService.getAllJobs();
+	}
+
+	@GetMapping("/search")
+	public List<JobResponse> searchJobsByTitle(
+			@RequestParam @NotBlank(message = "Search title is required") String title) {
+		return jobService.searchJobsByTitle(title);
 	}
 
 	@GetMapping("/{id}")
