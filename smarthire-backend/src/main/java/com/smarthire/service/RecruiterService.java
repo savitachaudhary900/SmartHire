@@ -8,11 +8,13 @@ import com.smarthire.dto.RecruiterResponse;
 public interface RecruiterService {
 	RecruiterResponse saveRecruiter(RecruiterRequest request);
 
-    List<RecruiterResponse> getAllRecruiters();
+	List<RecruiterResponse> getAllRecruiters();
 
-    RecruiterResponse getRecruiterById(Long id);
+	RecruiterResponse getRecruiterById(Long id);
 
-    RecruiterResponse updateRecruiter(Long id, RecruiterRequest request);
+	RecruiterResponse updateRecruiter(Long id, RecruiterRequest request);
 
-    void deleteRecruiter(Long id);
+	List<RecruiterResponse> searchRecruitersByCompanyName(String companyName);
+
+	void deleteRecruiter(Long id);
 }

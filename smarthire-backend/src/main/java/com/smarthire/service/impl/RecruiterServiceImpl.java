@@ -20,6 +20,7 @@ public class RecruiterServiceImpl implements RecruiterService {
 		this.recruiterRepository = recruiterRepository;
 	}
 
+	@Override
 	public RecruiterResponse saveRecruiter(RecruiterRequest request) {
 
 		Recruiter recruiter = new Recruiter();
@@ -31,11 +32,20 @@ public class RecruiterServiceImpl implements RecruiterService {
 		return mapToResponse(savedRecruiter);
 	}
 
+	@Override
 	public List<RecruiterResponse> getAllRecruiters() {
 
 		return recruiterRepository.findAll().stream().map(this::mapToResponse).toList();
 	}
 
+	@Override
+	public List<RecruiterResponse> searchRecruitersByCompanyName(String companyName) {
+
+		return recruiterRepository.findByCompanyNameContainingIgnoreCase(companyName).stream().map(this::mapToResponse)
+				.toList();
+	}
+
+	@Override
 	public RecruiterResponse getRecruiterById(Long id) {
 
 		Recruiter recruiter = recruiterRepository.findById(id)
@@ -44,6 +54,7 @@ public class RecruiterServiceImpl implements RecruiterService {
 		return mapToResponse(recruiter);
 	}
 
+	@Override
 	public RecruiterResponse updateRecruiter(Long id, RecruiterRequest request) {
 
 		Recruiter existingRecruiter = recruiterRepository.findById(id)
@@ -56,6 +67,7 @@ public class RecruiterServiceImpl implements RecruiterService {
 		return mapToResponse(updatedRecruiter);
 	}
 
+	@Override
 	public void deleteRecruiter(Long id) {
 
 		Recruiter existingRecruiter = recruiterRepository.findById(id)
