@@ -17,6 +17,8 @@ public interface JobService {
 
 	List<JobResponse> searchJobsByTitle(String title);
 
+	List<JobResponse> searchJobsByLocation(String location);
+
 	void deleteJob(Long id);
 
 }

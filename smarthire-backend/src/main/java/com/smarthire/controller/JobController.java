@@ -54,6 +54,13 @@ public class JobController {
 		return jobService.searchJobsByTitle(title);
 	}
 
+	@GetMapping("/search/location")
+	public List<JobResponse> searchJobsByLocation(
+			@RequestParam @NotBlank(message = "Search location is required") String location) {
+
+		return jobService.searchJobsByLocation(location);
+	}
+
 	@GetMapping("/{id}")
 	public ResponseEntity<JobResponse> getJobById(@PathVariable Long id) {
 

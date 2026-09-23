@@ -70,15 +70,18 @@ public class JobServiceImpl implements JobService {
 				.orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
 		return mapToResponse(job);
 	}
+
 	@Override
 	public List<JobResponse> searchJobsByTitle(String title) {
-		return jobRepository.findByTitleContainingIgnoreCase(title)
-				.stream().
-				map(this::mapToResponse)
-				.toList();
+		return jobRepository.findByTitleContainingIgnoreCase(title).stream().map(this::mapToResponse).toList();
 	}
 
-	
+	@Override
+	public List<JobResponse> searchJobsByLocation(String location) {
+
+		return jobRepository.findByLocationContainingIgnoreCase(location).stream().map(this::mapToResponse).toList();
+	}
+
 	@Override
 	public JobResponse updateJob(Long id, JobRequest request) {
 		Job existingJob = jobRepository.findById(id)
@@ -98,5 +101,4 @@ public class JobServiceImpl implements JobService {
 		jobRepository.delete(existingJob);
 	}
 
-	
 }
