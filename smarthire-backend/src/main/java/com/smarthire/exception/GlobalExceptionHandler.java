@@ -26,6 +26,14 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> handleJobNotFound(JobNotFoundException exception) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
 	}
+	@ExceptionHandler(RecruiterNotFoundException.class)
+	public ResponseEntity<String> handleRecruiterNotFound(
+	        RecruiterNotFoundException exception) {
+
+	    return ResponseEntity
+	            .status(HttpStatus.NOT_FOUND)
+	            .body(exception.getMessage());
+	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException exception) {
