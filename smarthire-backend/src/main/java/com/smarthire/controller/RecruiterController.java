@@ -46,11 +46,19 @@ public class RecruiterController {
 
 		return recruiterService.getAllRecruiters();
 	}
+
 	@GetMapping("/search")
 	public List<RecruiterResponse> searchRecruitersByCompanyName(
-	        @RequestParam @NotBlank(message = "Search company name is required") String companyName) {
+			@RequestParam @NotBlank(message = "Search company name is required") String companyName) {
 
-	    return recruiterService.searchRecruitersByCompanyName(companyName);
+		return recruiterService.searchRecruitersByCompanyName(companyName);
+	}
+
+	@GetMapping("/search/location")
+	public List<RecruiterResponse> searchRecruitersByLocation(
+			@RequestParam @NotBlank(message = "Search location is required") String location) {
+
+		return recruiterService.searchRecruitersByLocation(location);
 	}
 
 	@GetMapping("/{id}")

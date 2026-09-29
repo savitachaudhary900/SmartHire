@@ -38,10 +38,18 @@ public class RecruiterServiceImpl implements RecruiterService {
 		return recruiterRepository.findAll().stream().map(this::mapToResponse).toList();
 	}
 
+	
 	@Override
 	public List<RecruiterResponse> searchRecruitersByCompanyName(String companyName) {
 
 		return recruiterRepository.findByCompanyNameContainingIgnoreCase(companyName).stream().map(this::mapToResponse)
+				.toList();
+	}
+
+	@Override
+	public List<RecruiterResponse> searchRecruitersByLocation(String location) {
+
+		return recruiterRepository.findByLocationContainingIgnoreCase(location).stream().map(this::mapToResponse)
 				.toList();
 	}
 

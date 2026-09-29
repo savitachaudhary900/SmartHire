@@ -16,5 +16,8 @@ public interface RecruiterService {
 
 	List<RecruiterResponse> searchRecruitersByCompanyName(String companyName);
 
+	List<RecruiterResponse> searchRecruitersByLocation(String location);
+
+
 	void deleteRecruiter(Long id);
 }

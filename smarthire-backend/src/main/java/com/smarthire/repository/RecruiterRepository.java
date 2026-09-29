@@ -9,4 +9,6 @@ import com.smarthire.entity.Recruiter;
 public interface RecruiterRepository extends JpaRepository<Recruiter, Long> {
 
 	List<Recruiter> findByCompanyNameContainingIgnoreCase(String companyName);
+
+	List<Recruiter> findByLocationContainingIgnoreCase(String loctaion);
 }
