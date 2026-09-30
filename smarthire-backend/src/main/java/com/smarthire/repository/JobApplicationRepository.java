@@ -6,4 +6,5 @@ import com.smarthire.entity.JobApplication;
 
 public interface JobApplicationRepository extends JpaRepository<JobApplication, Long> {
 
-}
+	boolean existsByCandidateIdAndJobId(Long candidateId, Long jobId);
+	}

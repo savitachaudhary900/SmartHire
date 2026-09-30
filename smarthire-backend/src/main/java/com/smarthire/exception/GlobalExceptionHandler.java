@@ -3,9 +3,11 @@ package com.smarthire.exception;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import com.smarthire.exception.JobApplicationAlreadyExistsException;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,13 +28,16 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> handleJobNotFound(JobNotFoundException exception) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
 	}
-	@ExceptionHandler(RecruiterNotFoundException.class)
-	public ResponseEntity<String> handleRecruiterNotFound(
-	        RecruiterNotFoundException exception) {
 
-	    return ResponseEntity
-	            .status(HttpStatus.NOT_FOUND)
-	            .body(exception.getMessage());
+	@ExceptionHandler(RecruiterNotFoundException.class)
+	public ResponseEntity<String> handleRecruiterNotFound(RecruiterNotFoundException exception) {
+
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+	}
+
+	@ExceptionHandler(JobApplicationAlreadyExistsException.class)
+	public ResponseEntity<String> handleJobApplicationAlreadyExists(JobApplicationAlreadyExistsException exception) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
@@ -59,21 +64,19 @@ public class GlobalExceptionHandler {
 
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Database constraint violation");
 	}
+
 	@ExceptionHandler(ConstraintViolationException.class)
-	public ResponseEntity<Map<String, String>> handleConstraintViolation(
-	        ConstraintViolationException exception) {
+	public ResponseEntity<Map<String, String>> handleConstraintViolation(ConstraintViolationException exception) {
 
-	    Map<String, String> errors = new HashMap<>();
+		Map<String, String> errors = new HashMap<>();
 
-	    exception.getConstraintViolations().forEach(error -> {
-	        String fieldName = error.getPropertyPath().toString();
-	        String message = error.getMessage();
+		exception.getConstraintViolations().forEach(error -> {
+			String fieldName = error.getPropertyPath().toString();
+			String message = error.getMessage();
 
-	        errors.put(fieldName, message);
-	    });
+			errors.put(fieldName, message);
+		});
 
-	    return ResponseEntity
-	            .badRequest()
-	            .body(errors);
+		return ResponseEntity.badRequest().body(errors);
 	}
 }
