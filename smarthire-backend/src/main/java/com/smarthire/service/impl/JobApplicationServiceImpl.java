@@ -1,12 +1,16 @@
 package com.smarthire.service.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.smarthire.dto.JobApplicationRequest;
 import com.smarthire.dto.JobApplicationResponse;
+import com.smarthire.dto.JobApplicationStatusRequest;
 import com.smarthire.entity.JobApplication;
 import com.smarthire.exception.CandidateNotFoundException;
 import com.smarthire.exception.JobApplicationAlreadyExistsException;
+import com.smarthire.exception.JobApplicationNotFoundException;
 import com.smarthire.exception.JobNotFoundException;
 import com.smarthire.repository.CandidateRepository;
 import com.smarthire.repository.JobApplicationRepository;
@@ -54,6 +58,12 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 		return mapToResponse(savedApplication);
 	}
 
+	@Override
+	public List<JobApplicationResponse> getAllApplications() {
+
+		return jobApplicationRepository.findAll().stream().map(this::mapToResponse).toList();
+	}
+
 	private JobApplicationResponse mapToResponse(JobApplication application) {
 
 		JobApplicationResponse response = new JobApplicationResponse();
@@ -66,4 +76,36 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
 		return response;
 	}
+
+	@Override
+	public JobApplicationResponse getApplicationById(Long id) {
+
+		JobApplication application = jobApplicationRepository.findById(id)
+				.orElseThrow(() -> new JobApplicationNotFoundException("Job application not found with id: " + id));
+
+		return mapToResponse(application);
+	}
+
+	@Override
+	public JobApplicationResponse updateApplicationStatus(Long id, JobApplicationStatusRequest request) {
+
+		JobApplication application = jobApplicationRepository.findById(id)
+				.orElseThrow(() -> new JobApplicationNotFoundException("Job application not found with id: " + id));
+
+		application.setStatus(request.getStatus());
+
+		JobApplication updatedApplication = jobApplicationRepository.save(application);
+
+		return mapToResponse(updatedApplication);
+	}
+
+	@Override
+	public void deleteApplication(Long id) {
+
+		JobApplication application = jobApplicationRepository.findById(id)
+				.orElseThrow(() -> new JobApplicationNotFoundException("Job application not found with id: " + id));
+
+		jobApplicationRepository.delete(application);
+	}
+
 }

@@ -3,16 +3,14 @@ package com.smarthire.exception;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import com.smarthire.exception.JobApplicationAlreadyExistsException;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
+import com.smarthire.exception.JobApplicationNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
@@ -79,4 +77,11 @@ public class GlobalExceptionHandler {
 
 		return ResponseEntity.badRequest().body(errors);
 	}
+
+	@ExceptionHandler(JobApplicationNotFoundException.class)
+	public ResponseEntity<String> handleJobApplicationNotFound(JobApplicationNotFoundException exception) {
+
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+	}
+
 }
